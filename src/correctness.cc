@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "mutex_queue.hpp"
+#include "two_lock_queue.hpp"
 
 template <typename Queue>
 void test_dequeue_empty_returns_false() {
@@ -149,6 +150,9 @@ void run_all_tests() {
 int main() {
   std::cout << "MutexQueue" << std::endl;
   run_all_tests<MutexQueue<int>>();
+
+  std::cout << "TwoLockQueue" << std::endl;
+  run_all_tests<TwoLockQueue<int>>();
 
   return 0;
 }
