@@ -4,9 +4,9 @@ SANFLAGS  := -std=c++23 -O0 -Wall -Wextra -pthread -g
 INCLUDES  := -I include
 BIN_DIR   := bin
 
-.PHONY: all clean correctness
+.PHONY: all clean correctness performance
 
-all: correctness
+all: correctness performance
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
@@ -25,3 +25,7 @@ $(BIN_DIR)/correctness_asan: ./src/correctness.cc | $(BIN_DIR)
 
 correctness: $(BIN_DIR)/correctness $(BIN_DIR)/correctness_tsan $(BIN_DIR)/correctness_asan
 
+$(BIN_DIR)/performance: ./src/performance.cc | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+performance: $(BIN_DIR)/performance 
