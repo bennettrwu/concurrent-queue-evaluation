@@ -10,7 +10,6 @@
 #include "two_lock_queue.hpp"
 
 struct TestItem {
-  unsigned long long id;
   std::chrono::steady_clock::time_point start_enqueue_time;
   std::chrono::steady_clock::time_point done_enqueue_time;
   std::chrono::steady_clock::time_point start_dequeue_time;
@@ -125,18 +124,21 @@ void export_results(std::vector<TestItem*>& items,
                     const std::string& output_file) {
   std::ofstream f(output_file);
   f << "id,latency_ns,enqueue_delay_ns,dequeue_delay_ns\n";
-  for (auto* item : items) {
-    auto latency = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                       item->done_dequeue_time - item->start_enqueue_time)
-                       .count();
-    auto enqueue_delay = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                             item->done_enqueue_time - item->start_enqueue_time)
-                             .count();
-    auto dequeue_delay = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                             item->done_dequeue_time - item->start_dequeue_time)
-                             .count();
-    f << item->id << "," << latency << "," << enqueue_delay << ","
-      << dequeue_delay << "\n";
+  for (unsigned long long i = 0; i < items.size(); i++) {
+    auto latency =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            items[i]->done_dequeue_time - items[i]->start_enqueue_time)
+            .count();
+    auto enqueue_delay =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            items[i]->done_enqueue_time - items[i]->start_enqueue_time)
+            .count();
+    auto dequeue_delay =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            items[i]->done_dequeue_time - items[i]->start_dequeue_time)
+            .count();
+    f << i << "," << latency << "," << enqueue_delay << "," << dequeue_delay
+      << "\n";
   }
 }
 
