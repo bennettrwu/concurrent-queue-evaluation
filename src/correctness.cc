@@ -7,6 +7,7 @@
 
 #include "mutex_queue.hpp"
 #include "two_lock_queue.hpp"
+#include "plj_queue.hpp"
 
 template <typename Queue>
 void test_dequeue_empty_returns_false() {
@@ -153,6 +154,9 @@ int main() {
 
   std::cout << "TwoLockQueue" << std::endl;
   run_all_tests<TwoLockQueue<int>>();
+
+  std::cout << "PLJQueue" << std::endl;
+  run_all_tests<PLJQueue<int>>();
 
   return 0;
 }
