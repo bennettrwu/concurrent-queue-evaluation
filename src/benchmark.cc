@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "mutex_queue.hpp"
+#include "plj_queue.hpp"
 #include "two_lock_queue.hpp"
 
 struct TestItem {
@@ -153,7 +154,7 @@ int main(int argc, char** argv) {
     std::cerr << "Usage: " << argv[0]
               << " <queue_type> <n_producers> <n_consumers>"
                  " <items_per_producer> [output_file]\n"
-              << "  queue_type: MutexQueue | TwoLockQueue\n";
+              << "  queue_type: MutexQueue | TwoLockQueue | PLJQueue\n";
     return 1;
   }
 
@@ -170,6 +171,9 @@ int main(int argc, char** argv) {
   } else if (queue_type == "TwoLockQueue") {
     run_performance_test<TwoLockQueue<TestItem>>(
         items_per_producer, n_producers, n_consumers, output_file);
+  } else if (queue_type == "PLJQueue") {
+    run_performance_test<PLJQueue<TestItem>>(items_per_producer, n_producers,
+                                             n_consumers, output_file);
   } else {
     std::cerr << "Unknown queue type: " << queue_type << "\n";
     return 1;
