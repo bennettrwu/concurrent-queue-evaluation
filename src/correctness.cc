@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "mutex_queue.hpp"
-#include "two_lock_queue.hpp"
 #include "plj_queue.hpp"
+#include "two_lock_queue.hpp"
 
 template <typename Queue>
 void test_dequeue_empty_returns_false() {
@@ -124,9 +124,17 @@ void test_n_producers_n_consumers(int n_producers, int n_consumers) {
   }
   for (auto& t : consumers) t.join();
 
-  // Flatten consumedItems
+  // Flatten consumedItems and verify per-producer ordering on each consumer
   std::vector<int> allConsumedItems;
   for (auto& v : consumedItems) {
+    // Track the last seen value from each producer
+    std::vector<int> lastSeen(n_producers, -1);
+    for (int val : v) {
+      int producerId = val / ITEMS_PER_PRODUCER;
+      assert(val > lastSeen[producerId]);
+      lastSeen[producerId] = val;
+    }
+
     allConsumedItems.insert(allConsumedItems.end(), v.begin(), v.end());
   }
   std::sort(allConsumedItems.begin(), allConsumedItems.end());
