@@ -24,7 +24,7 @@ public:
     // Structure Pointer
     struct Pointer {
         Object* ptr{nullptr};
-        Count count{0};
+        Count count{0, 0};
 
         bool operator==(const Pointer& other) const {
             return ptr == other.ptr && count == other.count;
