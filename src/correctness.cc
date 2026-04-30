@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 
+#include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
 #include "two_lock_queue.hpp"
@@ -165,6 +166,9 @@ int main() {
 
   std::cout << "PLJQueue" << std::endl;
   run_all_tests<PLJQueue<int>>();
+
+  std::cout << "MSQueue" << std::endl;
+  run_all_tests<MSQueue<int>>();
 
   return 0;
 }

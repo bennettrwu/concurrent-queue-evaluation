@@ -6,6 +6,7 @@
 #include <thread>
 #include <vector>
 
+#include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
 #include "two_lock_queue.hpp"
@@ -154,7 +155,7 @@ int main(int argc, char** argv) {
     std::cerr << "Usage: " << argv[0]
               << " <queue_type> <n_producers> <n_consumers>"
                  " <items_per_producer> [output_file]\n"
-              << "  queue_type: MutexQueue | TwoLockQueue | PLJQueue\n";
+              << "  queue_type: MutexQueue | TwoLockQueue | PLJQueue | MSQueue\n";
     return 1;
   }
 
@@ -173,6 +174,9 @@ int main(int argc, char** argv) {
         items_per_producer, n_producers, n_consumers, output_file);
   } else if (queue_type == "PLJQueue") {
     run_performance_test<PLJQueue<TestItem>>(items_per_producer, n_producers,
+                                             n_consumers, output_file);
+  } else if (queue_type == "MSQueue") {
+    run_performance_test<MSQueue<TestItem>>(items_per_producer, n_producers,
                                              n_consumers, output_file);
   } else {
     std::cerr << "Unknown queue type: " << queue_type << "\n";
