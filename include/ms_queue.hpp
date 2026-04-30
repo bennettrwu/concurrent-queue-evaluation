@@ -131,9 +131,11 @@ public:
                 }
             }
         }
-        // D19: It is safe now to free the old dummy node
-        delete head.ptr;
-        
+        // D19: The original algorithm frees head.ptr here, but a concurrent
+        // enqueue or dequeue may still be reading head.ptr->next. Leak for now.
+        // Similar issue as in PLJ queue
+        // delete head.ptr;
+       
         // D20: return TRUE (Queue was not empty, dequeue succeeded)
         return true;
     }
