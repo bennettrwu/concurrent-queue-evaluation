@@ -9,6 +9,7 @@
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
 #include "two_lock_queue.hpp"
+#include "valois_queue.hpp"
 
 template <typename Queue>
 void test_dequeue_empty_returns_false() {
@@ -169,6 +170,9 @@ int main() {
 
   std::cout << "MSQueue" << std::endl;
   run_all_tests<MSQueue<int>>();
+
+  std::cout << "ValoisQueue" << std::endl;
+  run_all_tests<ValoisQueue<int>>();
 
   return 0;
 }

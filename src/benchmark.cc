@@ -10,6 +10,7 @@
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
 #include "two_lock_queue.hpp"
+#include "valois_queue.hpp"
 
 struct TestItem {
   std::chrono::steady_clock::time_point start_enqueue_time;
@@ -155,7 +156,8 @@ int main(int argc, char** argv) {
     std::cerr << "Usage: " << argv[0]
               << " <queue_type> <n_producers> <n_consumers>"
                  " <items_per_producer> [output_file]\n"
-              << "  queue_type: MutexQueue | TwoLockQueue | PLJQueue | MSQueue\n";
+              << "  queue_type: MutexQueue | TwoLockQueue | PLJQueue | MSQueue |"
+                 " ValoisQueue\n";
     return 1;
   }
 
@@ -178,6 +180,9 @@ int main(int argc, char** argv) {
   } else if (queue_type == "MSQueue") {
     run_performance_test<MSQueue<TestItem>>(items_per_producer, n_producers,
                                              n_consumers, output_file);
+  } else if (queue_type == "ValoisQueue") {
+    run_performance_test<ValoisQueue<TestItem>>(
+        items_per_producer, n_producers, n_consumers, output_file);
   } else {
     std::cerr << "Unknown queue type: " << queue_type << "\n";
     return 1;
