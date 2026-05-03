@@ -6,9 +6,9 @@ INCLUDES  := -I include
 BIN_DIR   := bin
 HEADERS   := $(wildcard include/*.hpp)
 
-.PHONY: all clean correctness benchmark
+.PHONY: all clean correctness benchmark calibrate
 
-all: correctness benchmark
+all: correctness benchmark calibrate
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
@@ -31,3 +31,8 @@ $(BIN_DIR)/benchmark: ./src/benchmark.cc $(HEADERS) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@ $(LDLIBS)
 
 benchmark: $(BIN_DIR)/benchmark
+
+$(BIN_DIR)/calibrate: ./src/calibrate.cc include/work.hpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< -o $@ $(LDLIBS)
+
+calibrate: $(BIN_DIR)/calibrate
