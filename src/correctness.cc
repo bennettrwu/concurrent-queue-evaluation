@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "lcr_queue.hpp"
+#include "lpr_queue.hpp"
 #include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
@@ -179,6 +180,9 @@ int main() {
 
   std::cout << "LCRQueue" << std::endl;
   run_all_tests<LCRQueue<int>>();
+
+  std::cout << "LPRQueue" << std::endl;
+  run_all_tests<LPRQueue<int>>();
 
   return 0;
 }

@@ -67,9 +67,10 @@ class CRQ {
         desired, false, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE);
   }
 
+  static constexpr uint64_t UNDEFINED_NODE_VAL = 0;
+
  public:
   enum class EnqueueResult { OK, CLOSED };
-  static constexpr uint64_t UNDEFINED_NODE_VAL = 0;
   static constexpr uint64_t EMPTY = 0;
 
   alignas(64) std::atomic<CRQ*> next;

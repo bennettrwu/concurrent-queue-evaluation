@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "lcr_queue.hpp"
+#include "lpr_queue.hpp"
 #include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
@@ -222,21 +223,22 @@ void run_performance_test(const std::string& queue_type,
 }
 
 int main(int argc, char** argv) {
-  if (argc < 6) {
+  if (argc < 5) {
     std::cerr << "Usage: " << argv[0]
-              << " <queue_type> <n_threads> <ops_per_thread> <work_iters> "
-                 "<max_samples> [output_file]\n"
+              << " <ops_per_thread> <work_iters> <queue_type> <n_threads> "
+                 "[output_file] [max_samples]\n"
               << "  queue_type:  MutexQueue | TwoLockQueue | PLJQueue | "
-                 "MSQueue | ValoisQueue | LCRQueue\n";
+                 "MSQueue | ValoisQueue | LCRQueue | LPRQueue\n";
     return 1;
   }
+  unsigned long long ops_per_thread = std::stoull(argv[1]);
+  uint64_t work_iters = std::stoull(argv[2]);
 
-  std::string queue_type = argv[1];
-  int n_threads = std::stoi(argv[2]);
-  unsigned long long ops_per_thread = std::stoull(argv[3]);
-  uint64_t work_iters = std::stoull(argv[4]);
-  uint64_t max_samples = std::stoull(argv[5]);
-  std::string output_file = (argc >= 7) ? argv[6] : "";
+  std::string queue_type = argv[3];
+  int n_threads = std::stoi(argv[4]);
+
+  std::string output_file = (argc > 5) ? argv[5] : "";
+  uint64_t max_samples = (argc > 6) ? std::stoull(argv[6]) : 0;
 
   std::cout << queue_type << "\n";
   if (queue_type == "MutexQueue") {
@@ -261,6 +263,10 @@ int main(int argc, char** argv) {
                                                 max_samples, output_file);
   } else if (queue_type == "LCRQueue") {
     run_performance_test<LCRQueue<TestItem>>(queue_type, ops_per_thread,
+                                             n_threads, work_iters, max_samples,
+                                             output_file);
+  } else if (queue_type == "LPRQueue") {
+    run_performance_test<LPRQueue<TestItem>>(queue_type, ops_per_thread,
                                              n_threads, work_iters, max_samples,
                                              output_file);
   } else {

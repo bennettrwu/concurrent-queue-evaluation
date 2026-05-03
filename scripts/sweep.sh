@@ -3,7 +3,7 @@ set -euo pipefail
 
 BINARY=bin/benchmark
 CALIBRATE=bin/calibrate
-QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue LCRQueue"
+QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue LCRQueue LPRQueue"
 THREADS="1 2 4 8 16"
 TRIALS=5
 OPS_PER_THREAD=1000000
@@ -24,7 +24,7 @@ for queue in $QUEUES; do
       out="$OUTPUT_DIR/${queue}_threads${n_threads}_trial${trial}.csv"
 
       echo "  " num_threads=${n_threads} trial=${trial} work_iters=${WORK_ITERS} max_samples=${MAX_SAMPLES}
-      $BINARY $queue $n_threads $OPS_PER_THREAD $WORK_ITERS $MAX_SAMPLES $out >/dev/null
+      $BINARY $OPS_PER_THREAD $WORK_ITERS $queue $n_threads $out $MAX_SAMPLES >/dev/null
     done
   done
 done
