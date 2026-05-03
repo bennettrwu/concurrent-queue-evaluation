@@ -11,6 +11,7 @@
 #include <thread>
 #include <vector>
 
+#include "lcr_queue.hpp"
 #include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
@@ -258,8 +259,10 @@ int main(int argc, char** argv) {
     run_performance_test<ValoisQueue<TestItem>>(queue_type, ops_per_thread,
                                                 n_threads, work_iters,
                                                 max_samples, output_file);
-    run_performance_test<ValoisQueue<TestItem>>(
-        items_per_producer, n_producers, n_consumers, output_file);
+  } else if (queue_type == "LCRQueue") {
+    run_performance_test<LCRQueue<TestItem>>(queue_type, ops_per_thread,
+                                             n_threads, work_iters, max_samples,
+                                             output_file);
   } else {
     std::cerr << "Unknown queue type: " << queue_type << "\n";
     return 1;

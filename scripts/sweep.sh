@@ -3,7 +3,7 @@ set -euo pipefail
 
 BINARY=bin/benchmark
 CALIBRATE=bin/calibrate
-QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue"
+QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue LCRQueue"
 THREADS="1 2 4 8 16"
 TRIALS=5
 OPS_PER_THREAD=1000000

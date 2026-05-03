@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 
+#include "lcr_queue.hpp"
 #include "ms_queue.hpp"
 #include "mutex_queue.hpp"
 #include "plj_queue.hpp"
@@ -85,6 +86,8 @@ void test_n_producers_n_consumers(int n_producers, int n_consumers) {
             << "_consumers";
 
   Queue q;
+  int end = 0;
+  int* end_ptr = &end;
   std::vector<int> items;
   std::vector<std::thread> producers;
   std::vector<std::thread> consumers;
@@ -105,14 +108,14 @@ void test_n_producers_n_consumers(int n_producers, int n_consumers) {
     }));
   }
 
-  // Each consumer continuously dequeues until nullptr is received
+  // Each consumer continuously dequeues until end_ptr is received
   // Dequeued items are appened to per consumer consumedItems vector
   for (int c = 0; c < n_consumers; c++) {
     consumers.push_back(std::thread([&, c]() {
       int* item;
       while (true) {
         if (q.dequeue(item)) {
-          if (item == nullptr) break;
+          if (item == end_ptr) break;
           consumedItems[c].push_back(*item);
         }
       }
@@ -122,7 +125,7 @@ void test_n_producers_n_consumers(int n_producers, int n_consumers) {
   for (auto& t : producers) t.join();
   // Send termination signal to consumers after all producers are finished
   for (int c = 0; c < n_consumers; c++) {
-    q.enqueue(nullptr);
+    q.enqueue(end_ptr);
   }
   for (auto& t : consumers) t.join();
 
@@ -173,6 +176,9 @@ int main() {
 
   std::cout << "ValoisQueue" << std::endl;
   run_all_tests<ValoisQueue<int>>();
+
+  std::cout << "LCRQueue" << std::endl;
+  run_all_tests<LCRQueue<int>>();
 
   return 0;
 }
