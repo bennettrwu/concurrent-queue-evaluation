@@ -36,9 +36,9 @@ for queue in $QUEUES; do
       continue
     fi
 
-    echo "  " num_threads=${n_threads} ops_per_thread=${ops_per_thread} work_iters=${WORK_ITERS} max_samples=${MAX_SAMPLES}
+    echo "  " num_threads=${n_threads} ops_per_thread=${ops_per_thread} work_iters=${WORK_ITERS}
     if ! timeout "${TRIAL_TIMEOUT}" perf stat -x , -e "$PERF_EVENTS" -o "$perf_out" -- \
-          "$BINARY" $ops_per_thread $WORK_ITERS $queue $n_threads $bench_out $MAX_SAMPLES > /dev/null; then
+          "$BINARY" $ops_per_thread $WORK_ITERS $queue $n_threads > /dev/null; then
       rc=$?
       echo "   TIMEOUT (rc=$rc, timeout=${TRIAL_TIMEOUT}): queue=$queue threads=$n_threads"
       echo "   wiping cell and skipping all higher thread counts for $queue"
