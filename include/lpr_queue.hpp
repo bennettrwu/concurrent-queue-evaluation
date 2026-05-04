@@ -6,7 +6,7 @@
 
 class PRQ {
  private:
-  static constexpr uint64_t R = 1ULL << 12;
+  static constexpr uint64_t R = 1ULL << 10;
   static constexpr uint64_t STARVING_THRESHOLD = R;
 
   struct alignas(64) Cell {
