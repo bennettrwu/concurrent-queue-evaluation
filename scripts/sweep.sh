@@ -4,15 +4,17 @@ set -euo pipefail
 BINARY=bin/benchmark
 CALIBRATE=bin/calibrate
 QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue LCRQueue LPRQueue"
-THREADS="1 2 4 8 16 32 64 128 256"
+THREADS="1 2 4 8 16 32 48 64 96 144 192"
 TRIALS=5
-TOTAL_OPS=64000000
+TOTAL_OPS=128000000
 WORK_ITERS=${2:-100}
-MAX_SAMPLES=100000
+MAX_SAMPLES=128000
 OUTPUT_DIR=${1:-results}
-TRIAL_TIMEOUT=60
+TRIAL_TIMEOUT=120
 
 trap 'echo; echo "interrupted"; exit 130' INT
+
+lscpu
 
 mkdir -p "$OUTPUT_DIR"
 for queue in $QUEUES; do
