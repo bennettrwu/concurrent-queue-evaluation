@@ -4,7 +4,7 @@ set -euo pipefail
 BINARY=bin/benchmark
 QUEUES="MutexQueue TwoLockQueue PLJQueue MSQueue ValoisQueue LCRQueue LPRQueue"
 THREADS="1 2 4 8 16 32 48 64 96 144 192"
-TOTAL_OPS=192000000
+TOTAL_OPS=38400000
 WORK_ITERS=${2:-100}
 MAX_SAMPLES=128000
 OUTPUT_DIR=${1:-results-perf}
