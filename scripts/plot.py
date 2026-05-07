@@ -127,10 +127,11 @@ def plot_metric(
     ylabel: str,
     yscale: str = "linear",
     show_errorbars: bool = True,
+    queues: list[str] | None = None,
 ) -> None:
     mean_col = f"{metric}_mean"
     min_col, max_col = f"{metric}_min", f"{metric}_max"
-    for q in QUEUE_ORDER:
+    for q in (queues if queues is not None else QUEUE_ORDER):
         sub = agg[agg["queue"] == q].sort_values("n_threads")
         if sub.empty:
             continue
@@ -163,21 +164,24 @@ def plot_metric(
 
 
 PLOTS = [
-    ("throughput",  "throughput_mops", "Throughput vs. threads",        "throughput (Mops/s, enq+deq)", "linear"),
-    ("latency_p50", "e2e_p50",         "Median end-to-end latency",     "latency (ns)",                 "log"),
-    ("latency_p99", "e2e_p99",         "p99 end-to-end latency",        "latency (ns)",                 "log"),
-    ("latency_mean","e2e_mean",        "Mean end-to-end latency",       "latency (ns)",                 "log"),
-    ("enq_p50",     "enq_p50",         "Median enqueue latency",        "latency (ns)",                 "log"),
-    ("deq_p50",     "deq_p50",         "Median dequeue latency",        "latency (ns)",                 "log"),
+    ("throughput",          "throughput_mops", "Throughput vs. threads",                   "throughput (Mops/s, enq+deq)", "linear", None),
+    ("throughput_classical","throughput_mops", "Throughput vs. threads (excl. LCR/LPR)",   "throughput (Mops/s, enq+deq)", "linear", [q for q in QUEUE_ORDER if q not in ("LCRQueue", "LPRQueue")]),
+    ("latency_p50",         "e2e_p50",         "Median end-to-end latency",                "latency (ns)",                 "log",    None),
+    ("latency_p99",         "e2e_p99",         "p99 end-to-end latency",                   "latency (ns)",                 "log",    None),
+    ("latency_mean",        "e2e_mean",        "Mean end-to-end latency",                  "latency (ns)",                 "log",    None),
+    ("enq_p50",             "enq_p50",         "Median enqueue latency",                   "latency (ns)",                 "log",    None),
+    ("deq_p50",             "deq_p50",         "Median dequeue latency",                   "latency (ns)",                 "log",    None),
 ]
 
 SUPTITLE = ("AWS m8i.metal-48xl (Xeon 6975P-C, 96C/192T, 3 NUMA nodes)")
 
 
 def make_single_plot(agg: pd.DataFrame, out_path: Path,
-                     metric: str, title: str, ylabel: str, yscale: str) -> None:
+                     metric: str, title: str, ylabel: str, yscale: str,
+                     queues: list[str] | None = None) -> None:
     fig, ax = plt.subplots(figsize=(8, 5.5))
-    plot_metric(agg, ax, metric, title=title, ylabel=ylabel, yscale=yscale)
+    plot_metric(agg, ax, metric, title=title, ylabel=ylabel, yscale=yscale,
+                queues=queues)
     ax.legend(loc="best", fontsize=9, frameon=True, framealpha=0.85)
     fig.suptitle(SUPTITLE, fontsize=10, y=0.995)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
@@ -187,9 +191,9 @@ def make_single_plot(agg: pd.DataFrame, out_path: Path,
 
 
 def make_plots(agg: pd.DataFrame, out_dir: Path) -> None:
-    for name, metric, title, ylabel, yscale in PLOTS:
+    for name, metric, title, ylabel, yscale, queues in PLOTS:
         make_single_plot(agg, out_dir / f"plot_{name}.png",
-                         metric, title, ylabel, yscale)
+                         metric, title, ylabel, yscale, queues)
 
 
 def print_summary(agg: pd.DataFrame) -> None:
